@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name : ehealth-api-deploy
+spec:
+  selector:
+    matchLabels:
+      app: ehealth
+      tier: ehealthdb  
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app : ehealth
+        tier: ehealthdb
+    spec:
+      containers:
+      - name: ehealth-db-server
+        image: mysql
+        env:          
+        - name: MYSQL_ROOT_PASSWORD # Use secret in real usage
+          value: p@ssw0rd!   
+        ports:
+        - containerPort: 3306
+        
+      - name: ehealth-db-pma
+        image: phpmyadmin
+        ports:
+        - containerPort: 80
+
+      - name: ehealth-api
+        image: lodymcfly/ehealth:java_api_v0.0.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ehealth-api-db
+spec:
+  selector:
+    app: ehealth
+  ports:
+  - port: 3306
+    targetPort: 3306

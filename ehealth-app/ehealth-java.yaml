@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ehealth-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ehealth-api
+      tier: backend-api
+  template:
+    metadata:
+      labels:
+        app: ehealth-api
+        tier: backend-api
+    spec:
+      containers:
+        - name: ehealth-api
+          image: "lodymcfly/ehealth:java_api_v0.0.1"
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+            name: ehealth-api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ehealth-api
+spec:
+  selector:
+    app: ehealth-api
+    tier: backend-api
+  type: NodePort   # this is the default type
+  ports:
+  - nodePort: 30080
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ehealth-api-core-access
+spec:
+  selector:
+    app: ehealth-api
+    tier: backend-api
+  type: ClusterIP   # this is the default type
+  ports:
+  - port: 8080
+    targetPort: 8080

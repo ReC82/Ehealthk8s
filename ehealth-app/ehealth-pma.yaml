@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ehealth-pma
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ehealth-pma
+      tier: pma  
+  template:
+    metadata:
+      labels:
+        app: ehealth-pma
+        tier: pma  
+    spec:
+      containers:
+      - image: phpmyadmin
+        name: ehealth-pma
+        env:          
+        - name: PMA_HOST # Use secret in real usage
+          value: ehealth-db
+        ports:
+        - containerPort: 80
+          name: ehealth-pma
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ehealth-pma
+spec:
+  selector:
+    app: ehealth-pma
+    tier: pma
+  type: NodePort   # this is the default type
+  ports:
+  - nodePort: 30081
+    port: 80
+    targetPort: 80

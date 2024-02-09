@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ehealth-db
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ehealth-db
+      tier: db  
+  template:
+    metadata:
+      labels:
+        app: ehealth-db
+        tier: db  
+    spec:
+      containers:
+      - image: mysql
+        name: ehealth-db
+        env:          
+        - name: MYSQL_ROOT_PASSWORD # Use secret in real usage
+          value: p@ssw0rd!
+        ports:
+        - containerPort: 3306
+          name: ehealth-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ehealth-db
+spec:
+  selector:
+    app: ehealth-db
+    tier: db
+  type: ClusterIP   # this is the default type
+  ports:
+  - port: 3306

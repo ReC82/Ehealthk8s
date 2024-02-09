@@ -1,0 +1,31 @@
+version: '3'
+services:
+  ehealth_DbServer:
+    image: mysql
+    container_name: ehealth_DbServer
+    networks:
+      mynetwork:     
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=p@ssw0rd!
+
+  pma_Server:
+    image: phpmyadmin
+    container_name: pma
+    environment:
+      - PMA_ARBITRARY=1
+    ports:
+      - "8181:80"
+    networks:
+      mynetwork:      
+
+  web_server:
+    image: lodymcfly/ehealth:java_api_v0.0.1
+    container_name: ehealth_api
+    ports:
+      - "8000:8080"    
+    networks:
+      mynetwork:
+networks:
+  mynetwork:

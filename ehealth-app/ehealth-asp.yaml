@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ehealth-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ehealth-core
+      tier: backend-core
+  template:
+    metadata:
+      labels:
+        app: ehealth-core
+        tier: backend-core
+    spec:
+      containers:
+        - name: ehealth-core
+          env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Production
+          image: "lodymcfly/ehealth:asp_corev1.0"
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+            name: ehealth-core
+          #command: ["sh", "-c", "nslookup ehealth-api-core-access"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ehealth-core
+spec:
+  selector:
+    app: ehealth-core
+    tier: backend-core
+  type: NodePort   # this is the default type
+  ports:
+  - nodePort: 30088
+    port: 8080
+    targetPort: 8080
