@@ -46,5 +46,5 @@ spec:
     tier: backend-api
   type: ClusterIP   # this is the default type
   ports:
-  - port: 8080
+  - port: 16000
     targetPort: 8080

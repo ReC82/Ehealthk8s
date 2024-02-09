@@ -18,7 +18,7 @@ spec:
         - name: ehealth-core
           env:
           - name: ASPNETCORE_ENVIRONMENT
-            value: Production
+            value: Development 
           image: "lodymcfly/ehealth:asp_corev1.0"
           imagePullPolicy: Always
           ports:
